@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent, useCallback, useState } from 'react';
 import { SearchResults } from './components/SearchResults';
 
 /**
@@ -56,6 +56,11 @@ function App () {
     setResults(data)
 
   }
+  // useCallback usado para manter a igualdade referencial de uma funçao, evitando renderização desnecessária quando seu componente pai for atualizado
+
+  const addToWishlist = useCallback(async (id: number) => {
+    console.log(id)
+  }, [])
 
   return (
     <div className="App">
@@ -71,7 +76,10 @@ function App () {
 
         <button type='submit'> Buscar</button>
 
-        <SearchResults results={results} />
+        <SearchResults
+          results={results}
+          onAddToWishlist={addToWishlist}
+        />
       </form>
     </div >
   );

@@ -6,17 +6,19 @@ interface SearchResultsProps {
     price: number;
     title: string;
   }>
+  onAddToWishlist: (id: number) => void
 }
 
-export function SearchResults ({ results }: SearchResultsProps) {
+export function SearchResults ({ results, onAddToWishlist }: SearchResultsProps) {
 
   /* 
   useMemo 
-  - to memoize a value and avoid unecessary HEAVY calculations
+  - to MEMOIZE A VALUE and avoid unecessary HEAVY calculations
 
-  - Ou entao para manter a igualdade referencial (mesma posição na memoria) evitando que a informação seja recriada do zero, 
+  - Usado tambem para manter a igualdade referencial (mesma posição na memoria) 
+    evitando que a informação seja recriada do zero, 
     evitando a verificação/execução do algoritimo de reconciliação 
-    e entao a passando a informação para um componente filho.
+    passando a mesma informação para um componente filho.
 
   */
   const totalPrice = useMemo(() => {
@@ -32,7 +34,11 @@ export function SearchResults ({ results }: SearchResultsProps) {
       <h2>{totalPrice}</h2>
       {results.map(product => {
         return (
-          <ProductItem product={product} />
+          <ProductItem
+            key={product.id}
+            product={product}
+            onAddToWishlist={onAddToWishlist}
+          />
         )
       })}
     </div>
