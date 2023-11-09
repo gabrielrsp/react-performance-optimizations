@@ -37,10 +37,25 @@ import { SearchResults } from './components/SearchResults';
  * 
  */
 
+interface ProductProps {
+  id: number;
+  price: number;
+  priceFormatted: string;
+  title: string;
+}
+
+type Results = {
+  totalPrice: number
+  data: ProductProps[]
+}
+
 function App () {
 
   const [search, setSearch] = useState('')
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState<Results>({
+    totalPrice: 0,
+    data: []
+  })
 
   async function handleSearch (event: FormEvent) {
     event.preventDefault();
@@ -53,7 +68,24 @@ function App () {
 
     const data = await response.json()
 
-    setResults(data)
+    const formatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+
+    const products = data.map((product: ProductProps) => {
+      return {
+        id: product.id,
+        title: product.title,
+        priceFormatted: formatter.format(product.price)
+      }
+    })
+
+    const totalPrice = data.reduce((total: number, product: ProductProps) => {
+      return total + product.price;
+    }, 0)
+
+    setResults({ totalPrice, data: products })
 
   }
   // useCallback usado para manter a igualdade referencial de uma funçao, evitando renderização desnecessária quando seu componente pai for atualizado
@@ -61,6 +93,8 @@ function App () {
   const addToWishlist = useCallback(async (id: number) => {
     console.log(id)
   }, [])
+
+
 
   return (
     <div className="App">
@@ -77,7 +111,8 @@ function App () {
         <button type='submit'> Buscar</button>
 
         <SearchResults
-          results={results}
+          results={results.data}
+          totalPrice={results.totalPrice}
           onAddToWishlist={addToWishlist}
         />
       </form>
@@ -86,3 +121,8 @@ function App () {
 }
 
 export default App;
+
+
+
+
+

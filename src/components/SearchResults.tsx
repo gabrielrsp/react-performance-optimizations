@@ -1,15 +1,17 @@
 import { ProductItem } from "./ProductItem";
-import { useMemo } from 'react'
+// import { useMemo } from 'react'
 interface SearchResultsProps {
+  totalPrice: number
   results: Array<{
     id: number;
     price: number;
     title: string;
+    priceFormatted: string;
   }>
   onAddToWishlist: (id: number) => void
 }
 
-export function SearchResults ({ results, onAddToWishlist }: SearchResultsProps) {
+export function SearchResults ({ totalPrice, results, onAddToWishlist }: SearchResultsProps) {
 
   /* 
   useMemo 
@@ -21,11 +23,11 @@ export function SearchResults ({ results, onAddToWishlist }: SearchResultsProps)
     passando a mesma informação para um componente filho.
 
   */
-  const totalPrice = useMemo(() => {
-    return results.reduce((total, product) => {
-      return total + product.price;
-    }, 0)
-  }, [results])
+  // const totalPrice = useMemo(() => {
+  //   return results.reduce((total, product) => {
+  //     return total + product.price;
+  //   }, 0)
+  // }, [results])
 
 
 
