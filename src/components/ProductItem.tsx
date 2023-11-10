@@ -1,4 +1,7 @@
-import { memo } from 'react'
+import { memo, useState, lazy, Suspense } from 'react'
+// import { AddProductToWishlist } from './AddProductToWishlist';
+
+const AddProductToWishlist = lazy(() => import('./AddProductToWishlist'))
 
 /**
  *  O memo é uma função usada por volta de um componente
@@ -27,10 +30,25 @@ interface ProductItemProps {
 }
 
 function ProductItemComponent ({ product, onAddToWishlist }: ProductItemProps) {
+
+  const [isAddingToWishlist, setIsAddingToWishlist] = useState(false)
+
   return (
     <div>
       {product.title} - <strong>{product.priceFormatted}</strong>
-      <button onClick={() => onAddToWishlist(product.id)} ></button>
+      <button onClick={() => setIsAddingToWishlist(true)} >Adicionar aos favoritos</button>
+
+      {
+        isAddingToWishlist &&
+
+        <Suspense fallback={<div>Loading...</div>}>
+          <AddProductToWishlist
+            onAddToWishlist={() => onAddToWishlist(product.id)}
+            onRequestClose={() => setIsAddingToWishlist(false)}
+          />
+        </Suspense>
+      }
+
     </div>
   )
 
