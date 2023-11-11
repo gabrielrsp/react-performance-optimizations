@@ -1,3 +1,4 @@
+import { List, ListRowRenderer } from 'react-virtualized'
 import { ProductItem } from "./ProductItem";
 // import { useMemo } from 'react'
 interface SearchResultsProps {
@@ -29,12 +30,31 @@ export function SearchResults ({ totalPrice, results, onAddToWishlist }: SearchR
   //   }, 0)
   // }, [results])
 
-
+  const rowRenderer: ListRowRenderer = ({ index, key, style }) => {
+    return (
+      <div key={key} style={style}>
+        <ProductItem
+          product={results[index]}
+          onAddToWishlist={onAddToWishlist}
+        />
+      </div>
+    )
+  }
 
   return (
     <div>
       <h2>{totalPrice}</h2>
-      {results.map(product => {
+
+      <List
+        height={300}
+        rowHeight={30}
+        width={900}
+        overscanRowCount={5}  //quantidade de itens pre carregados tanto pra cima quanto pra baixo ao dar scroll
+        rowCount={results.length}  // quantos itens aparece no maximo
+        rowRenderer={rowRenderer}  // funçao que renderiza cada item da lista
+      />
+
+      {/* {results.map(product => {
         return (
           <ProductItem
             key={product.id}
@@ -42,7 +62,7 @@ export function SearchResults ({ totalPrice, results, onAddToWishlist }: SearchR
             onAddToWishlist={onAddToWishlist}
           />
         )
-      })}
+      })} */}
     </div>
   )
 }
